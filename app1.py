@@ -6,6 +6,8 @@ import speech_recognition as sr
 import scipy.io.wavfile as wavfile
 import wave
 import base64
+from TTS.api import TTS
+tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2",gpu=False)
 
 
 app = Flask(__name__)
@@ -38,15 +40,22 @@ def upload_audio():
             text_file_handle.write(text_data)
         print("Text file uploaded successfully")
 
+        tts.tts_to_file(text=open(r"flaskupload/outputtext1.txt", 'r').read(),
+        file_path = "temp.wav",
+        speaker_wav = [r"C:\Users\vamsi\venv\New folder\flaskupload\output_audio1.wav"],
+        language="en",
+        split_sentences=True
+        )
+        # return "model creadted"
+        return send_file(r"C:\Users\vamsi\venv\New folder\temp.wav", mimetype='audio/wav', as_attachment=True)
         # try:
             # text = recognizer.recognize_google(audio)
             # print("Recognized text:", text)
         # except sr.UnknownValueError:
         #     print("Could not recognize audio.")
-        return 'Files uploaded successfully'
     
 
 
 
 if __name__ == '__main__':
-    app.run(debug=True,)
+    app.run(debug=True,host="0.0.0.0",port=5000)
